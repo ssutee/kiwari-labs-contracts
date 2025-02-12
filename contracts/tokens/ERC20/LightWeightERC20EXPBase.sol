@@ -57,12 +57,7 @@ abstract contract ERC20EXPBase is Context, IERC20, IERC20Metadata, IERC20Errors,
     /// @param startSlot The starting slot index within the epoch to retrieve balances.
     /// @param endSlot The ending slot index within the epoch to retrieve balances.
     /// @return balance The total balance across the specified slots within the epoch.
-    function _slotBalance(
-        address account,
-        uint256 epoch,
-        uint8 startSlot,
-        uint8 endSlot
-    ) private view returns (uint256 balance) {
+    function _slotBalance(address account, uint256 epoch, uint8 startSlot, uint8 endSlot) private view returns (uint256 balance) {
         unchecked {
             for (; startSlot <= endSlot; startSlot++) {
                 balance += _balances[account][epoch][startSlot].slotBalance;
@@ -83,12 +78,7 @@ abstract contract ERC20EXPBase is Context, IERC20, IERC20Metadata, IERC20Errors,
     /// @return balance The total buffered balance within the specified epoch and slot.
     /// @custom:gas-inefficiency This function can consume significant gas due to potentially
     /// iterating through a large array of block indices.
-    function _bufferSlotBalance(
-        address account,
-        uint256 epoch,
-        uint8 slot,
-        uint256 blockNumber
-    ) private view returns (uint256 balance) {
+    function _bufferSlotBalance(address account, uint256 epoch, uint8 slot, uint256 blockNumber) private view returns (uint256 balance) {
         Slot storage _spender = _balances[account][epoch][slot];
         uint256 key = _getFirstUnexpiredBlockBalance(_spender.list, blockNumber, _getFrameSizeInBlockLength());
         while (key > 0) {
@@ -560,11 +550,7 @@ abstract contract ERC20EXPBase is Context, IERC20, IERC20Metadata, IERC20Errors,
     }
 
     /// @custom:gas-inefficiency if not limit the size of array
-    function tokenList(
-        address account,
-        uint256 epoch,
-        uint8 slot
-    ) external view virtual returns (uint256[] memory list) {
+    function tokenList(address account, uint256 epoch, uint8 slot) external view virtual returns (uint256[] memory list) {
         list = _balances[account][epoch][slot].list.ascending();
     }
 }
